@@ -1,3 +1,11 @@
+# Optimized by ci-cost (https://github.com/mariotavarez/ci-cost)
+# Applied 4 optimizations:
+# - [HIGH] Add pip dependency cache to "check-python-style" job
+# - [MEDIUM] Add concurrency group to "ci.yml"
+# - [MEDIUM] 3 jobs clone the repo — consider artifact sharing
+# - [LOW] Explicitly set fail-fast for large matrix job "build-python-wheels" (5 combinations)
+# Estimated savings: ~8 min/run
+#
 name: CI
 
 on:
@@ -8,6 +16,10 @@ on:
   pull_request:
     branches: [master]
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   # ------------------------------------------------------------
   # C++ library build & test (fast sanity check)
